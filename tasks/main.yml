@@ -1,5 +1,5 @@
 ---
-# tasks file for intel_sgx_pws
+# tasks file for intel_sgx_psw
 
 - name: Include variables
   ansible.builtin.include_vars:

@@ -1,5 +1,5 @@
 ---
-# defaults file for intel_sgx_pws
+# defaults file for intel_sgx_psw
 
 install_deps:
    - "gpg-agent"

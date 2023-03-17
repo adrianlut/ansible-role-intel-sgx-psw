@@ -2,6 +2,6 @@
 - name: Converge
   hosts: all
   tasks:
-    - name: "Include melhindi.intel_sgx_pws"
+    - name: "Include adrianlut.intel_sgx_psw"
       ansible.builtin.include_role:
-        name: "melhindi.intel_sgx_pws"
+        name: "adrianlut.intel_sgx_psw"
