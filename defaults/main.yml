@@ -11,6 +11,7 @@ intel_sgx_packages:
   - "libsgx-dcap-ql"
   - "libsgx-urts"
   - "libsgx-launch"
+  - "sgx-aesm-service"
 
 intel_sgx_debug_packages:
   - "libsgx-urts-dbgsym"
