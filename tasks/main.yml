@@ -51,3 +51,36 @@
     install_recommends: false
   become: true
   when: install_sgx_dev
+
+- name: Ensure group "sgx_prv" exists
+  ansible.builtin.group:
+    name: sgx_prv
+    state: present
+  become: true
+
+- name: Ensure group "sgx" exists
+  ansible.builtin.group:
+    name: sgx
+    state: present
+  become: true
+
+- name: udev rule sgx_provision
+  ansible.builtin.replace:
+    path: /etc/udev/rules.d/93-sgx-provision.rules
+    regexp: 'MODE=\"0660\"'
+    replace: 'MODE="0666"'
+
+- name: udev rule sgx_enclave
+  ansible.builtin.lineinfile:
+    path: /etc/udev/rules.d/94-sgx-enclave.rules
+    line: 'SUBSYSTEM=="misc",KERNEL=="sgx_enclave",SYMLINK+="sgx/enclave",GROUP="sgx",MODE="0666"'
+    search_string: "SUBSYSTEM"
+    state: present
+  become: true
+  vars:
+    new_version: "{{ ansible_facts['os_family'] == 'Debian' and ansible_facts['distribution_major_version'] | int >= 22 }}"
+  when: new_version | bool
+
+- name: Reload udev rules
+  ansible.builtin.command: udevadm trigger
+  become: true
