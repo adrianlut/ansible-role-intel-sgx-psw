@@ -13,18 +13,18 @@
     install_recommends: false
   become: true
 
-- name: Add APT repository key
-  ansible.builtin.apt_key:
-    url: "https://download.01.org/intel-sgx/sgx_repo/ubuntu/intel-sgx-deb.key"
-    state: present
-  become: true
+- name: Install Intel SGX Repository
+  block:
+    - name: Download key
+      ansible.builtin.get_url:
+        url: https://download.01.org/intel-sgx/sgx_repo/ubuntu/intel-sgx-deb.key
+        dest: /etc/apt/keyrings/intel-sgx.asc
 
-- name: Add APT repository
-  ansible.builtin.apt_repository:
-    repo: "deb [arch=amd64] https://download.01.org/intel-sgx/sgx_repo/ubuntu {{ ansible_distribution_release }} main"
-    state: present
-    update_cache: true
-  become: true
+    - name: Install Repo
+      ansible.builtin.apt_repository:
+        repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/intel-sgx.asc] https://download.01.org/intel-sgx/sgx_repo/ubuntu {{ ansible_distribution_release }} main"
+        state: present
+        filename: intel-sgx
 
 - name: Install the Intel sgx packages
   ansible.builtin.apt:
